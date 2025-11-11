@@ -42,8 +42,8 @@ type Address struct {
 	DeletedAt     gorm.DeletedAt `gorm:"index;comment:删除时间" json:"-"`
 
 	// 关联关系
-	User   User    `gorm:"foreignKey:UserID;references:ID" json:"user,omitempty"`
-	Orders []Order `gorm:"foreignKey:AddressID;references:ID" json:"orders,omitempty"`
+	User   User    `gorm:"foreignKey:UserID;references:ID" json:"-"`    // 隐藏反向关联，避免 JSON 输出冗余
+	Orders []Order `gorm:"foreignKey:AddressID;references:ID" json:"-"` // 隐藏反向关联，避免 JSON 输出冗余
 }
 
 // Order 订单表
@@ -66,9 +66,9 @@ type Order struct {
 	DeletedAt      gorm.DeletedAt `gorm:"index;comment:删除时间" json:"-"`
 
 	// 关联关系
-	User       User        `gorm:"foreignKey:UserID;references:ID" json:"user,omitempty"`
-	Address    Address     `gorm:"foreignKey:AddressID;references:ID" json:"address,omitempty"`
-	OrderItems []OrderItem `gorm:"foreignKey:OrderID;references:ID" json:"order_items,omitempty"`
+	User       User        `gorm:"foreignKey:UserID;references:ID" json:"-"`                      // 隐藏反向关联，避免 JSON 输出冗余
+	Address    Address     `gorm:"foreignKey:AddressID;references:ID" json:"-"`                   // 隐藏反向关联，避免 JSON 输出冗余
+	OrderItems []OrderItem `gorm:"foreignKey:OrderID;references:ID" json:"order_items,omitempty"` //如果值为零值，则不输出（对结构体无效）
 }
 
 // Product 商品表
@@ -108,6 +108,6 @@ type OrderItem struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index;comment:删除时间" json:"-"`
 
 	// 关联关系
-	Order   Order   `gorm:"foreignKey:OrderID;references:ID" json:"order,omitempty"`
-	Product Product `gorm:"foreignKey:ProductID;references:ID" json:"product,omitempty"`
+	Order   Order   `gorm:"foreignKey:OrderID;references:ID" json:"-"`   // 隐藏反向关联，避免 JSON 输出冗余
+	Product Product `gorm:"foreignKey:ProductID;references:ID" json:"-"` // 隐藏反向关联，避免 JSON 输出冗余
 }

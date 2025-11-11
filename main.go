@@ -28,7 +28,7 @@ func main() {
 		log.Fatalf("数据库迁移失败: %v", err)
 	}
 
-	Test_curd(db)
+	TestCurd(db)
 
 	// 可以在这里使用 db 进行数据库操作
 	_ = db
