@@ -17,7 +17,7 @@ func queryUsers(db *gorm.DB) ([]User, error) {
 }
 
 // queryUserOrders 查询指定用户的订单（包含订单明细）
-func queryUserOrders(db *gorm.DB, userID uint) (*User, error) {
+func queryUserOrders(db *gorm.DB, userID uint) {
 	var user User
 	if err := db.Debug().
 		// Preload("Orders") - 预加载用户的订单数据
@@ -33,15 +33,6 @@ func queryUserOrders(db *gorm.DB, userID uint) (*User, error) {
 		// 这样可以在一次查询中获取：用户 -> 订单 -> 订单明细 的完整数据
 		Preload("Orders.OrderItems").
 		First(&user, userID).Error; err != nil {
-		return nil, fmt.Errorf("查询用户订单失败: %v", err)
-	}
-	return &user, nil
-}
-
-// printUserOrders 打印用户的订单信息
-func printUserOrders(user *User) {
-	if user == nil {
-		fmt.Println("用户信息为空")
 		return
 	}
 
@@ -63,7 +54,7 @@ func printUserOrders(user *User) {
 	}
 
 	// JSON 格式输出
-	orderData, _ := json.MarshalIndent(user, "", "  ")
+	orderData, _ := json.Marshal(user)
 	fmt.Println("\n订单数据 (JSON):")
 	fmt.Println(string(orderData))
 }
@@ -81,10 +72,5 @@ func TestCurd(db *gorm.DB) {
 
 	// 查询第一个用户的订单
 	fmt.Println("\n=== 查询第一个用户的订单 ===")
-	firstUser, err := queryUserOrders(db, 1)
-	if err != nil {
-		fmt.Printf("查询用户订单失败: %v\n", err)
-	} else {
-		printUserOrders(firstUser)
-	}
+	queryUserOrders(db, 1)
 }
