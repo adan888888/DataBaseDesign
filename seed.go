@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // seedData 插入测试数据
-func seedData(db *gorm.DB) error {
+func seedData() error {
 	fmt.Println("开始插入测试数据...")
 
 	// 1. 插入用户数据

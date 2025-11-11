@@ -8,6 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// db 全局数据库实例
+var db *gorm.DB
+
 // DBConfig 数据库配置结构体
 type DBConfig struct {
 	Host     string
