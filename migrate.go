@@ -26,10 +26,12 @@ func migrate(db *gorm.DB) error {
 }
 
 // generateOrderNo 生成订单号
-// 格式: ORD + 年月日 + 6位随机数
+// 格式: ORD + 年月日 + 纳秒时间戳后8位
 func generateOrderNo() string {
 	now := time.Now()
-	return fmt.Sprintf("ORD%s%06d", now.Format("20060102"), now.Unix()%1000000)
+	// 使用纳秒时间戳的后8位，确保唯一性
+	nanos := now.UnixNano()
+	return fmt.Sprintf("ORD%s%08d", now.Format("20060102"), nanos%100000000)
 }
 
 // 订单状态常量
@@ -54,9 +56,11 @@ const (
 )
 
 // generateProductNo 生成商品编号
-// 格式: PROD + 年月日 + 6位随机数
-func generateProductNo() string {
+// 格式: PROD + 年月日 + 纳秒时间戳后8位 + 序号
+func generateProductNo(seq int) string {
 	now := time.Now()
-	return fmt.Sprintf("PROD%s%06d", now.Format("20060102"), now.Unix()%1000000)
+	// 使用纳秒时间戳的后8位 + 序号，确保唯一性
+	nanos := now.UnixNano()
+	return fmt.Sprintf("PROD%s%08d%02d", now.Format("20060102"), nanos%100000000, seq)
 }
 
